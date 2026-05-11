@@ -15,7 +15,7 @@
                e.g. ["https://drive.google.com/file/d/FILE_ID/view"]
 ═══════════════════════════════════════════════════════ */
 
-const PEOPLE = [
+const FALLBACK_PEOPLE = [
   // ── Chú Phát ──────────────────────────────────────
   { id: 1, group: "Chú Phát", name: "Cô Sen Vạn Kiếp", rice: 0, gift: 0, address: "125/4/11D Vạn Kiếp", hint: "Hẻm đối diện nhà thờ Phú Hiền", hint2: "", gps: "https://maps.app.goo.gl/xPTyeJyjsqF2HVuGA" },
   { id: 2, group: "Chú Phát", name: "Cô Hồng Phan Xích Long", rice: 1, gift: 1, address: "Kế bên 148B Hoa Đào Phú Nhuận", hint: "Kế bên 148B Hoa Đào Phú Nhuận", gps: "10°47'54.6\"N 106°41'03.2\"E" },
@@ -54,6 +54,10 @@ const PEOPLE = [
   { id: 27, group: "", name: "Cô Nguyên chú Phát (cựu thành viên nhóm)", rice: 0, gift: 1, address: "", hint: "" },
 ];
 
+let PEOPLE = [];
+// paste published CSV URL here
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQu5sBVsO0qM2AN6qXC-WUlqDgDBXzrFeR3f2J9z2kGH8rWJvxWrSOGMT9c7YZNBLCdSV-TobYilnS2/pub?gid=1942507551&single=true&output=csv";
+
 /* ═══════════════════════════════════════════════════════
    STATE
 ═══════════════════════════════════════════════════════ */
@@ -65,13 +69,13 @@ let currentId = null;
 /* ═══════════════════════════════════════════════════════
    ICONS
 ═══════════════════════════════════════════════════════ */
-const ICON_CHECK    = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
-const ICON_INFO     = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
-const ICON_PIN      = `<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
-const ICON_MAP      = `<svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>`;
+const ICON_CHECK = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
+const ICON_INFO = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+const ICON_PIN = `<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+const ICON_MAP = `<svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>`;
 const ICON_EXTERNAL = `<svg viewBox="0 0 24 24" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
-const ICON_GPS      = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>`;
-const ICON_NOTE     = `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+const ICON_GPS = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>`;
+const ICON_NOTE = `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
 
 /* ═══════════════════════════════════════════════════════
    UTILS
@@ -124,19 +128,19 @@ function tag(text, color) {
 function personTags(p) {
   if (p.rice === 0 && p.gift === 0) return tag("Không có", "purple");
   return (p.rice > 0 ? tag(`${p.rice} cơm`, "") : "") +
-         (p.gift > 0 ? tag(`${p.gift} quà`, "amber") : "");
+    (p.gift > 0 ? tag(`${p.gift} quà`, "amber") : "");
 }
 
 function sectionTotalsTags(totalRice, totalGift) {
   return (totalRice > 0 ? tag(`${totalRice} cơm`, "") : "") +
-         (totalGift > 0 ? tag(`${totalGift} quà`, "amber") : "");
+    (totalGift > 0 ? tag(`${totalGift} quà`, "amber") : "");
 }
 
 function detailTags(p) {
   const s = `style="font-size:12px;padding:3px 9px;"`;
   if (p.rice === 0 && p.gift === 0) return `<span class="tag purple" ${s}>Không có</span>`;
   return (p.rice > 0 ? `<span class="tag" ${s}>${p.rice} phần cơm</span>` : "") +
-         (p.gift > 0 ? `<span class="tag amber" ${s}>${p.gift} phần quà</span>` : "");
+    (p.gift > 0 ? `<span class="tag amber" ${s}>${p.gift} phần quà</span>` : "");
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -310,10 +314,10 @@ function renderDetail(id) {
     noteBanner() +
     mapButton(mapUrl) +
     `<div class="detail-section"><div class="detail-card">` +
-      detailRow(ICON_PIN, "Địa chỉ", p.address) +
-      (p.hint ? detailRow(ICON_INFO, "Gợi ý tìm nhà", p.hint) : "") +
-      (p.gps && !p.gps.startsWith("http") ? detailRow(ICON_GPS, "Tọa độ GPS", p.gps, { mono: true }) : "") +
-      (p.note ? detailRow(ICON_NOTE, "Ghi chú / Ảnh", p.note) : "") +
+    detailRow(ICON_PIN, "Địa chỉ", p.address) +
+    (p.hint ? detailRow(ICON_INFO, "Gợi ý tìm nhà", p.hint) : "") +
+    (p.gps && !p.gps.startsWith("http") ? detailRow(ICON_GPS, "Tọa độ GPS", p.gps, { mono: true }) : "") +
+    (p.note ? detailRow(ICON_NOTE, "Ghi chú / Ảnh", p.note) : "") +
     `</div></div>` +
     imageGallery(p.imgUrls);
 }
@@ -387,8 +391,104 @@ document.getElementById("search-input").addEventListener("input", function () {
 });
 
 /* ═══════════════════════════════════════════════════════
+   DATA LOADING
+═══════════════════════════════════════════════════════ */
+function parseCSV(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+
+  const rows = [];
+  let row = [], i = 0;
+  while (i < text.length) {
+    if (text[i] === '"') {
+      let f = ''; i++;
+      while (i < text.length) {
+        if (text[i] === '"') {
+          if (text[i + 1] === '"') { f += '"'; i += 2; }
+          else { i++; break; }
+        } else { f += text[i++]; }
+      }
+      row.push(f);
+      if (text[i] === ',') { i++; }
+      else if (text[i] === '\r') { i++; if (text[i] === '\n') i++; rows.push(row); row = []; }
+      else if (text[i] === '\n') { i++; rows.push(row); row = []; }
+    } else {
+      let f = '';
+      while (i < text.length && text[i] !== ',' && text[i] !== '\r' && text[i] !== '\n') f += text[i++];
+      row.push(f);
+      if (text[i] === ',') { i++; }
+      else if (text[i] === '\r') { i++; if (text[i] === '\n') i++; rows.push(row); row = []; }
+      else if (text[i] === '\n') { i++; rows.push(row); row = []; }
+    }
+  }
+  if (row.length) rows.push(row);
+  if (rows.length < 2) return [];
+
+  const COL_MAP = {
+    "Người phụ trách": "group",
+    "STT": "id",
+    "Tên thân chủ": "name",
+    "Số phần cơm": "rice",
+    "Số phần quà": "gift",
+    "Định vị GPS": "gps",
+    "Địa chỉ": "address",
+    "Gợi ý tìm nhà": "hint",
+    "Hình ảnh": "imgUrls",
+  };
+  const headers = rows[0].map(h => h.trim());
+  const idx = {};
+  headers.forEach((h, j) => { if (COL_MAP[h]) idx[COL_MAP[h]] = j; });
+  const get = (r, field) => idx[field] !== undefined ? (r[idx[field]] || '').trim() : '';
+
+  let lastGroup = '';
+  const people = [];
+  for (let r = 1; r < rows.length; r++) {
+    const rawGroup = get(rows[r], 'group');
+    if (rawGroup) {
+      lastGroup = rawGroup.split('\n').map(l => l.trim())
+        .find(l => l && !l.startsWith('http') && !l.startsWith('Tổng')) || lastGroup;
+    }
+    const id = parseInt(get(rows[r], 'id'), 10);
+    if (!id || id <= 0) continue;
+    const imgRaw = get(rows[r], 'imgUrls');
+    const imgUrls = imgRaw ? imgRaw.split('|').map(u => u.trim()).filter(Boolean) : [];
+    const person = {
+      id,
+      group: lastGroup,
+      name: get(rows[r], 'name'),
+      rice: parseInt(get(rows[r], 'rice'), 10) || 0,
+      gift: parseInt(get(rows[r], 'gift'), 10) || 0,
+      gps: get(rows[r], 'gps'),
+      address: get(rows[r], 'address'),
+      hint: get(rows[r], 'hint'),
+    };
+    if (imgUrls.length) person.imgUrls = imgUrls;
+    people.push(person);
+  }
+  return people;
+}
+
+async function loadPeople() {
+  const res = await fetch(SHEET_CSV_URL);
+  if (!res.ok) throw new Error(res.status);
+  return parseCSV(await res.text());
+}
+
+function showLoading(on) {
+  document.getElementById("loading").hidden = !on;
+}
+
+/* ═══════════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════════ */
-// document.getElementById("month-badge").textContent = MONTH;
-renderFilters();
-renderList();
+(async () => {
+  if (SHEET_CSV_URL) {
+    showLoading(true);
+    try { PEOPLE = await loadPeople(); }
+    catch { PEOPLE = FALLBACK_PEOPLE; }
+    finally { showLoading(false); }
+  } else {
+    PEOPLE = FALLBACK_PEOPLE;
+  }
+  renderFilters();
+  renderList();
+})();
