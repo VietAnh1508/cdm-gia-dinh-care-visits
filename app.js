@@ -11,6 +11,8 @@
      hint     – gợi ý tìm nhà (optional)
      gps      – tọa độ hoặc link Google Maps (optional)
      note     – ghi chú thêm (optional)
+     imgUrls  – danh sách ảnh nhà, Google Drive share links (optional)
+               e.g. ["https://drive.google.com/file/d/FILE_ID/view"]
 ═══════════════════════════════════════════════════════ */
 
 const PEOPLE = [
@@ -23,22 +25,22 @@ const PEOPLE = [
 
   // ── Trúc ──────────────────────────────────────────
   { id: 6, group: "Trúc", name: "Sr Tuyết - Cô Diệu", rice: 3, gift: 1, address: "C107 Lý Văn Phức", hint: "Hẻm 33 Chung Cư Lý Văn Phức Quận 1. Nhờ Sơ Tuyết phát giùm: Chú Thành, Cô Diệu", gps: "https://maps.app.goo.gl/pAoDEsGJhg8VAPG66" },
-  { id: 7, group: "Trúc", name: "Chú Hùng", rice: 1, gift: 1, address: "52/59A Nguyễn Hữu Cầu, p Tân Định, Q1", hint: "", note: "■ chú Hùng.jpeg" },
+  { id: 7, group: "Trúc", name: "Chú Hùng", rice: 1, gift: 1, address: "52/59A Nguyễn Hữu Cầu, p Tân Định, Q1", hint: "", note: "", imgUrls: ["https://drive.google.com/file/d/1AZ-jmugxReaUyNFqEaPbOc0ILgRHPUDm/view"] },
   { id: 8, group: "Trúc", name: "Bà Nhân ông Quán", rice: 2, gift: 1, address: "214-21 BIS D Nguyễn Văn Nguyễn", hint: "", gps: "10°47'31.7\"N 106°41'14.6\"E" },
   { id: 9, group: "Trúc", name: "Chú Thiện Nguyễn Văn Nguyễn", rice: 1, gift: 1, address: "214/21 Bis C Nguyễn Văn Nguyễn", hint: "Hẻm Ngã 3 Kế Bên Ông Nhân Bà Quán", gps: "10°47'31.6\"N 106°41'14.6\"E" },
   { id: 10, group: "Trúc", name: "3 chị em Nguyễn Thị Diệu", rice: 3, gift: 2, address: "Hẻm 7/9 Nguyễn Thị Diệu, Q3", hint: "", gps: "10°46'37.1\"N 106°41'23.3\"E" },
-  { id: 11, group: "Hoàng Hoa", name: "Cô Ân ve chai Bùi Đình Tuý", rice: 1, gift: 1, address: "217/7019 A Bùi Đình Tuý", hint: "", gps: "https://maps.app.goo.gl/dk54iW3sjH4NEsfe7" },
-  { id: 12, group: "Hoàng Hoa", name: "Ông Hai Quang Bùi Đình Tuý", rice: 2, gift: 1, address: "220/37 Bùi Đình Tuý", hint: "", gps: "https://maps.app.goo.gl/UNvbWEMTuEbuoEfZ9" },
 
-  // ── Hoàng Hoa ─────────────────────────────────────
-  { id: 13, group: "Hoàng Hoa", name: "Cô Cảnh cô Mai Bình Lợi", rice: 2, gift: 1, address: "Hẻm 184 Nguyễn Xí, hỏi bếp ăn từ thiện Anh Đức (sau khu chung cư)", hint: "Kế bên bếp ăn từ thiện Anh Đức, bên trái có con đường đi vô 1 đoạn quẹo trái, đi lên 1 đoạn nhìn bên tay phải có cái xe hủ tiếu quẹo vô đó đi 1 đoạn có cái bình chữa cháy màu đỏ quẹo trái rồi quẹo phải. Đi thẳng xuống (nhà bên tay phải có cái xe lăn gấp gọn để ngoài)", gps: "10°49'06.8002\" N 106°42'31.7999\" E" },
-  { id: 14, group: "Hoàng Hoa", name: "2 cô nhà thờ Cổ", rice: 0, gift: 2, address: "377 Lê Quang Định vô 100m bên tay Phải", hint: "Vô trong nhà thờ lên lầu. Quẹo Phải đi thẳng nhà cuối nhà cô Yến. Nhà sau lưng cầu thang nhà cô Bé", gps: "10°48'48.0528\" N 106°41'21.0984\" E" },
-  { id: 15, group: "Hoàng Hoa", name: "Cô Thậy chú Tiền", rice: 0, gift: 1, address: "Hẻm 207/51 Nguyễn Văn Đậu", hint: "Đi hẻm 207/51. nhà cửa sắt kéo màu trắng bên tay Phải, có tượng Đức Mẹ (đối diện số nhà 207/51/17A)", gps: "10°48'46.6906\" N 106°41'20.0854\" E", note: "■ cô thậy chú tiền.jpg" },
+  // ── Hoàng, Hoa ─────────────────────────────────────
+  { id: 11, group: "Hoàng, Hoa", name: "Cô Ân ve chai Bùi Đình Tuý", rice: 1, gift: 1, address: "217/7019 A Bùi Đình Tuý", hint: "", gps: "https://maps.app.goo.gl/dk54iW3sjH4NEsfe7" },
+  { id: 12, group: "Hoàng, Hoa", name: "Ông Hai Quang Bùi Đình Tuý", rice: 2, gift: 1, address: "220/37 Bùi Đình Tuý", hint: "", gps: "https://maps.app.goo.gl/UNvbWEMTuEbuoEfZ9" },
+  { id: 13, group: "Hoàng, Hoa", name: "Cô Cảnh cô Mai Bình Lợi", rice: 2, gift: 1, address: "Hẻm 184 Nguyễn Xí, hỏi bếp ăn từ thiện Anh Đức (sau khu chung cư)", hint: "Kế bên bếp ăn từ thiện Anh Đức, bên trái có con đường đi vô 1 đoạn quẹo trái, đi lên 1 đoạn nhìn bên tay phải có cái xe hủ tiếu quẹo vô đó đi 1 đoạn có cái bình chữa cháy màu đỏ quẹo trái rồi quẹo phải. Đi thẳng xuống (nhà bên tay phải có cái xe lăn gấp gọn để ngoài)", gps: "10°49'06.8002\" N 106°42'31.7999\" E" },
+  { id: 14, group: "Hoàng, Hoa", name: "2 cô nhà thờ Cổ", rice: 0, gift: 2, address: "377 Lê Quang Định vô 100m bên tay Phải", hint: "Vô trong nhà thờ lên lầu. Quẹo Phải đi thẳng nhà cuối nhà cô Yến. Nhà sau lưng cầu thang nhà cô Bé", gps: "10°48'48.0528\" N 106°41'21.0984\" E" },
+  { id: 15, group: "Hoàng, Hoa", name: "Cô Thậy chú Tiền", rice: 0, gift: 1, address: "Hẻm 207/51 Nguyễn Văn Đậu", hint: "Đi hẻm 207/51. nhà cửa sắt kéo màu trắng bên tay Phải, có tượng Đức Mẹ (đối diện số nhà 207/51/17A)", gps: "10°48'46.6906\" N 106°41'20.0854\" E", note: "", imgUrls: ["https://drive.google.com/file/d/1BT4y46REipzp-k5MEJFTSXBP7zK72doJ/view"] },
 
   // ── VA ────────────────────────────────────────────
-  { id: 16, group: "VA", name: "Cô Xuân chú Long Bùi Hữu Nghĩa", rice: 2, gift: 1, address: "282/103/B1 Bùi Hữu Nghĩa", hint: "", gps: "10°48'01.1\"N 106°42'04.6\"E", note: "■ cô Xuân chú Long.jpg" },
-  { id: 17, group: "VA", name: "Chị Ngọc Phan Văn Hân", rice: 0, gift: 1, address: "Cuối hẻm 234 Phan Văn Hân, Bình Thạnh", hint: "Cuối hẻm 234 Phan Văn Hân, đi vô con hẻm nhỏ, nhà bên tay trái, có cửa màu xanh lá cây", gps: "10.7953750, 106.7031160", note: "■ chị Ngọc phan văn hân.jpg" },
-  { id: 18, group: "VA", name: "Anh Huy", rice: 1, gift: 1, address: "180/98 Xô Viết Nghệ Tĩnh", hint: "Cuối hẻm 180 Xô Viết Nghệ Tĩnh", gps: "10.7972520, 106.7131520", note: "■ anh Huy.jpg" },
+  { id: 16, group: "VA", name: "Cô Xuân chú Long Bùi Hữu Nghĩa", rice: 2, gift: 1, address: "282/103/B1 Bùi Hữu Nghĩa", hint: "", gps: "10°48'01.1\"N 106°42'04.6\"E", note: "", imgUrls: ["https://drive.google.com/file/d/1s_W-1eiQM4bcf7E089dlID1iiaEs7Y9A/view"] },
+  { id: 17, group: "VA", name: "Chị Ngọc Phan Văn Hân", rice: 0, gift: 1, address: "Cuối hẻm 234 Phan Văn Hân, Bình Thạnh", hint: "Cuối hẻm 234 Phan Văn Hân, đi vô con hẻm nhỏ, nhà bên tay trái, có cửa màu xanh lá cây", gps: "10.7953750, 106.7031160", note: "", imgUrls: ["https://drive.google.com/file/d/1K11Y-AgYV6mALYOxOZitb0132Q_Oo-NY/view"] },
+  { id: 18, group: "VA", name: "Anh Huy", rice: 1, gift: 1, address: "180/98 Xô Viết Nghệ Tĩnh", hint: "Cuối hẻm 180 Xô Viết Nghệ Tĩnh", gps: "10.7972520, 106.7131520", note: "", imgUrls: ["https://drive.google.com/file/d/1PGJmxQnWSvjpiOe2SkYXHfr6B0hFLGmf/view"] },
   { id: 19, group: "VA", name: "Bà Hai (Khu nhà trọ Chú Nghĩa)", rice: 1, gift: 1, address: "57/75 Điện Biên Phủ", hint: "Khu nhà trọ Chú Nghĩa" },
   { id: 20, group: "VA", name: "Ông Lượng (Khu nhà trọ Chú Nghĩa)", rice: 1, gift: 1, address: "57/75 Điện Biên Phủ", hint: "Khu nhà trọ Chú Nghĩa" },
   { id: 21, group: "VA", name: "Bà Đới", rice: 1, gift: 1, address: "57/75 Điện Biên Phủ", hint: "Khu nhà trọ Chú Nghĩa" },
@@ -80,6 +82,11 @@ function mapsUrl(gps) {
   if (dms) return `https://maps.google.com/?q=${encodeURIComponent(gps)}`;
   // Plain text address hint
   return `https://maps.google.com/?q=${encodeURIComponent(gps)}`;
+}
+
+function driveImgUrl(url) {
+  const m = url.match(/\/file\/d\/([^/?]+)/);
+  return m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800` : url;
 }
 
 function groups() {
@@ -147,7 +154,7 @@ function renderList() {
 
   groupNames.forEach(grp => {
     const members = byGroup[grp];
-    html += `<div class="section-header"><span>${grp}</span><span>${members.length} người</span></div>`;
+    html += `<div class="section-header"><span>Phụ trách: ${grp}</span><span>${members.length} người</span></div>`;
     members.forEach(p => {
       listIndex++;
       const isDone = done.has(p.id);
@@ -201,7 +208,7 @@ function renderDetail(id) {
       <div class="detail-row-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
       <div class="detail-row-content">
         <div class="detail-row-label">Gợi ý tìm nhà</div>
-        <div class="detail-row-value highlight">${p.hint}</div>
+        <div class="detail-row-value">${p.hint}</div>
       </div>
     </div>` : "";
 
@@ -211,6 +218,16 @@ function renderDetail(id) {
       <div class="detail-row-content">
         <div class="detail-row-label">Tọa độ GPS</div>
         <div class="detail-row-value mono">${p.gps}</div>
+      </div>
+    </div>` : "";
+
+  const imgSection = p.imgUrls && p.imgUrls.length ? `
+    <div class="detail-section">
+      <div class="img-gallery">
+        ${p.imgUrls.map(url => {
+    const src = driveImgUrl(url);
+    return `<a href="${src}" target="_blank" rel="noopener"><img class="gallery-img" src="${src}" alt="Ảnh nhà" loading="lazy"></a>`;
+  }).join("")}
       </div>
     </div>` : "";
 
@@ -243,6 +260,11 @@ function renderDetail(id) {
       </div>
     </div>
 
+    <div class="note-banner">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="note-banner-text">Trạng thái "Đã xong" sẽ mất khi tải lại trang — chỉ dùng để theo dõi trong buổi đi thăm.</div>
+    </div>
+
     ${mapBtn}
 
     <div class="detail-section">
@@ -260,10 +282,7 @@ function renderDetail(id) {
       </div>
     </div>
 
-    <div class="note-banner">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div class="note-banner-text">Trạng thái "Đã xong" sẽ mất khi tải lại trang — chỉ dùng để theo dõi trong buổi đi thăm.</div>
-    </div>
+    ${imgSection}
   `;
 }
 
