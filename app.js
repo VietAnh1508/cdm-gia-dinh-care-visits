@@ -117,17 +117,21 @@ function renderFilters() {
   ).join("");
 }
 
+function updateProgress() {
+  const people = filtered();
+  const total = people.length;
+  const doneN = people.filter(p => done.has(p.id)).length;
+  const pct = total ? Math.round(doneN / total * 100) : 0;
+  document.getElementById("progress-fill").style.width = pct + "%";
+  document.getElementById("progress-label").textContent = `${doneN} / ${total} xong`;
+}
+
 function renderList() {
   const body = document.getElementById("list-body");
   const empty = document.getElementById("empty-state");
   const people = filtered();
 
-  // Progress
-  const total = PEOPLE.length;
-  const doneN = done.size;
-  const pct = total ? Math.round(doneN / total * 100) : 0;
-  document.getElementById("progress-fill").style.width = pct + "%";
-  document.getElementById("progress-label").textContent = `${doneN} / ${total} xong`;
+  updateProgress();
 
   if (people.length === 0) {
     body.innerHTML = "";
@@ -311,12 +315,7 @@ function toggleDone(id) {
   if (done.has(id)) done.delete(id); else done.add(id);
   const isDone = done.has(id);
 
-  // Update progress bar
-  const total = PEOPLE.length;
-  const doneN = done.size;
-  const pct = total ? Math.round(doneN / total * 100) : 0;
-  document.getElementById("progress-fill").style.width = pct + "%";
-  document.getElementById("progress-label").textContent = `${doneN} / ${total} xong`;
+  updateProgress();
 
   // Update card and check button
   const card = document.getElementById(`card-${id}`);
@@ -337,12 +336,7 @@ function toggleDoneDetail(id) {
   if (doneCard) doneCard.classList.toggle("active", isDone);
   if (toggle) toggle.classList.toggle("on", isDone);
 
-  // Update progress bar
-  const total = PEOPLE.length;
-  const doneN = done.size;
-  const pct = total ? Math.round(doneN / total * 100) : 0;
-  document.getElementById("progress-fill").style.width = pct + "%";
-  document.getElementById("progress-label").textContent = `${doneN} / ${total} xong`;
+  updateProgress();
 
   // Update list card in background
   const listCard = document.getElementById(`card-${id}`);
