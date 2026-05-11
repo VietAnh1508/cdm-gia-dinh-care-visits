@@ -234,6 +234,17 @@ body {
   padding-top: 6px;
 }
 
+.section-header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.section-header-right .tag {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
 .person-card {
   background: var(--surface);
   border: 1px solid var(--border);

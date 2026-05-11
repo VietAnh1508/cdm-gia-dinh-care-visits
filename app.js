@@ -158,7 +158,11 @@ function renderList() {
 
   groupNames.forEach(grp => {
     const members = byGroup[grp];
-    html += `<div class="section-header"><span>Phụ trách: ${grp}</span><span>${members.length} người</span></div>`;
+    const totalRice = members.reduce((s, p) => s + (p.rice || 0), 0);
+    const totalGift = members.reduce((s, p) => s + (p.gift || 0), 0);
+    const riceTag = totalRice > 0 ? `<span class="tag">${totalRice} cơm</span>` : "";
+    const giftTag = totalGift > 0 ? `<span class="tag amber">${totalGift} quà</span>` : "";
+    html += `<div class="section-header"><span>Phụ trách: ${grp}</span><span class="section-header-right">${riceTag}${giftTag}<span>${members.length} nhà</span></span></div>`;
     members.forEach(p => {
       listIndex++;
       const isDone = done.has(p.id);
