@@ -13,15 +13,17 @@ The no-backend approach is a deliberate design decision — not a gap to fill. R
 The app is served (GitHub Pages or similar) — no build step, no dependencies. Open `index.html` via the server.
 
 **File layout:**
+
 - [index.html](index.html) — HTML shell only (no inline CSS or JS)
 - [style.css](style.css) — all styles
 - [app.js](app.js) — all data and logic
+- [static-data.csv](static-data.csv) — offline fallback data, manually exported from the Google Sheet
 
 ## Architecture
 
 [app.js](app.js) is structured as:
 
-1. **Data layer**: `PEOPLE` array of care-visit recipients. `MONTH` is a display constant updated each month.
+1. **Data layer**: Fetches live data from a Google Sheets published CSV (`SHEET_CSV_URL`). Falls back to `static-data.csv` if the fetch fails
 2. **In-memory state**: `done` (a `Set` of visited IDs), `currentFilter`, `searchQuery`, `currentId`. State resets on page refresh — intentional for MVP, communicated via a warning banner.
 3. **Two-screen UI**: `#screen-list` (filterable, searchable list grouped by caregiver) and `#screen-detail` (individual person card with map link and visit toggle). Navigation: `showList()` / `showDetail(id)`.
 4. **Rendering**: `renderFilters()`, `renderList()`, `renderDetail()` write `innerHTML` directly.
@@ -43,17 +45,11 @@ The app is served (GitHub Pages or similar) — no build step, no dependencies. 
 }
 ```
 
-### Monthly update workflow
+### Data update workflow
 
-1. Find the `PEOPLE` array at the top of [app.js](app.js)
-2. Add, remove, or edit person objects (never reuse or change an existing `id`)
-3. To reassign someone to a different caregiver, change their `group` string
-4. Update the `MONTH` constant (e.g. `"Tháng 6 · 2025"`)
-5. Commit and redeploy
-
-## Planned next step (Phase 2)
-
-Replace the hardcoded `PEOPLE` array with a `fetch()` of a Google-Sheets-published CSV — same rendering logic, live data source, still no backend. See README.md for the implementation sketch.
+1. Edit the Google Sheet directly — the app fetches it live at load time.
+2. Export `static-data.csv`: use the export button in the app UI, save the file to the project root, and commit it. This keeps the fallback in sync.
+3. Commit and redeploy.
 
 ## Conventions
 
@@ -61,3 +57,4 @@ Replace the hardcoded `PEOPLE` array with a `fetch()` of a Google-Sheets-publish
 - Mobile-first, capped at 480 px width, no media queries.
 - CSS custom properties (`--teal`, `--amber`, `--purple`) for tag colors.
 - ARIA labels on interactive elements — preserve when editing UI.
+
